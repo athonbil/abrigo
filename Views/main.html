@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Listagem de Cachorros - Abrigo</title>
+	<style>
+		:root {
+			--bg: #f4efe6;
+			--bg-soft: #fffaf2;
+			--ink: #1e1e1e;
+			--muted: #6a665f;
+			--brand: #14532d;
+			--brand-soft: #d1fae5;
+			--line: #d9d0c2;
+			--highlight: #a16207;
+			--card: #ffffff;
+			--shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+			color: var(--ink);
+			background:
+				radial-gradient(circle at 20% 15%, #f9e9cf 0%, transparent 35%),
+				radial-gradient(circle at 85% 80%, #dff2e5 0%, transparent 32%),
+				var(--bg);
+			min-height: 100vh;
+			padding: 28px 16px;
+		}
+
+		.container {
+			max-width: 980px;
+			margin: 0 auto;
+			animation: fade-in 600ms ease-out;
+		}
+
+		.hero {
+			background: linear-gradient(120deg, #fff3df 0%, #eefaf1 100%);
+			border: 1px solid var(--line);
+			border-radius: 18px;
+			box-shadow: var(--shadow);
+			padding: 24px;
+			margin-bottom: 18px;
+		}
+
+		.hero h1 {
+			font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+			line-height: 1.15;
+			margin-bottom: 8px;
+			letter-spacing: 0.2px;
+		}
+
+		.hero p {
+			color: var(--muted);
+			max-width: 58ch;
+		}
+
+		.badge {
+			display: inline-block;
+			margin-top: 14px;
+			background: var(--brand-soft);
+			color: #064e3b;
+			border: 1px solid #a7f3d0;
+			border-radius: 999px;
+			padding: 6px 12px;
+			font-size: 0.9rem;
+			font-weight: 700;
+		}
+
+		.table-wrap {
+			background: var(--card);
+			border: 1px solid var(--line);
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: var(--shadow);
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		thead th {
+			text-align: left;
+			background: #f9f5ed;
+			color: #3f3b35;
+			font-size: 0.92rem;
+			letter-spacing: 0.4px;
+			text-transform: uppercase;
+			border-bottom: 1px solid var(--line);
+			padding: 14px 16px;
+		}
+
+		tbody td {
+			padding: 14px 16px;
+			border-bottom: 1px solid #efe7da;
+		}
+
+		tbody tr:last-child td {
+			border-bottom: none;
+		}
+
+		tbody tr {
+			transition: background-color 220ms ease;
+		}
+
+		tbody tr:hover {
+			background: #fffcf6;
+		}
+
+		.tag {
+			display: inline-flex;
+			align-items: center;
+			border-radius: 999px;
+			font-size: 0.8rem;
+			font-weight: 700;
+			padding: 4px 10px;
+			border: 1px solid;
+		}
+
+		.porte-pequeno {
+			color: #1e3a8a;
+			background: #dbeafe;
+			border-color: #93c5fd;
+		}
+
+		.porte-medio {
+			color: #92400e;
+			background: #fef3c7;
+			border-color: #fcd34d;
+		}
+
+		.porte-grande {
+			color: #7f1d1d;
+			background: #fee2e2;
+			border-color: #fca5a5;
+		}
+
+		.empty {
+			padding: 20px 16px;
+			color: var(--muted);
+			text-align: center;
+		}
+
+		.footnote {
+			margin-top: 12px;
+			color: var(--highlight);
+			font-size: 0.92rem;
+			font-weight: 700;
+		}
+
+		@keyframes fade-in {
+			from {
+				opacity: 0;
+				transform: translateY(6px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 700px) {
+			thead {
+				display: none;
+			}
+
+			table,
+			tbody,
+			tr,
+			td {
+				display: block;
+				width: 100%;
+			}
+
+			tbody tr {
+				padding: 12px 14px;
+				border-bottom: 1px solid #efe7da;
+			}
+
+			tbody td {
+				border: none;
+				padding: 5px 0;
+			}
+
+			tbody td::before {
+				content: attr(data-label) ": ";
+				color: #6b6256;
+				font-weight: 700;
+			}
+		}
+	</style>
+</head>
+<body>
+	<main class="container">
+		<section class="hero">
+			<h1>Cachorros disponiveis para adocao</h1>
+			<p>Cachorrinho bonitinho, que coisa mais linda  .</p>
+			<span id="total" class="badge">0 cachorros cadastrados</span>
+		</section>
+
+		<section class="table-wrap" aria-label="Listagem de cachorros">
+			<table>
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Raca</th>
+						<th>Porte</th>
+					</tr>
+				</thead>
+				<tbody id="dogs-table-body">
+                    <?php
+                        $cachorroWk = new Cachorro();
+                        $animalController = new animalsController();
+                        $cachorros = $animalController->listarCachorros();
+                    ?>
+                    <?php foreach($cachorros as $cachorro){
+                        echo "<tr>";
+                        echo "<td data-label='Nome'>{$cachorro->getNome()}</td>";
+                        echo "<td data-label='Raça'>{$cachorro->getRaca()}</td>";
+
+                        $porteClass = "";
+                        switch($cachorro->getPorte()){
+                            case 'Pequeno':
+                                $porteClass = "porte-pequeno";
+                                break;
+                            case 'Médio':
+                                $porteClass = "porte-medio";
+                                break;
+                            case 'Grande':
+                                $porteClass = "porte-grande";
+                                break;
+                        }
+                        echo "<td data-label='Porte'><span class='tag {$porteClass}'>{$cachorro->getPorte()}</span></td>";
+                        echo "</tr>";
+                    } ?>
+                </tbody>
+			</table>
+			<p id="empty-state" class="empty" hidden>Nenhum cachorro cadastrado no momento.</p>
+		</section>
+	</main>
+
+	<script>
+	</script>
+</body>
+</html>
